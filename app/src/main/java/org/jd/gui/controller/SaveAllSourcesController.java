@@ -37,7 +37,9 @@ public class SaveAllSourcesController implements SourcesSavable.Controller, Sour
         this.saveAllSourcesView.show(file);
         // Execute background task
         executor.execute(() -> {
+            System.out.println("Saving All Sources - START");
             int fileCount = savable.getFileCount();
+            System.out.println("Saving All Sources - COUNT "+fileCount);
 
             saveAllSourcesView.updateProgressBar(0);
             saveAllSourcesView.setMaxValue(fileCount);
@@ -58,8 +60,10 @@ public class SaveAllSourcesController implements SourcesSavable.Controller, Sour
                 Files.deleteIfExists(path);
 
                 try {
+                    System.out.println("Saving All Sources - PATH "+path.toString());
                     savable.save(api, this, this, path);
                 } catch (Exception e) {
+                    System.out.println("Saving All Sources - FAILURE on SAVE "+e.getClass().getCanonicalName()+" "+e.getMessage());
                     assert ExceptionUtil.printStackTrace(e);
                     saveAllSourcesView.showActionFailedDialog();
                     cancel = true;
@@ -69,8 +73,10 @@ public class SaveAllSourcesController implements SourcesSavable.Controller, Sour
                     Files.deleteIfExists(path);
                 }
             } catch (Throwable t) {
+                System.out.println("Saving All Sources - FAILED "+t.getClass().getCanonicalName()+" "+t.getMessage());
                 assert ExceptionUtil.printStackTrace(t);
             }
+            System.out.println("Saving All Sources - DONE");
 
             saveAllSourcesView.hide();
         });

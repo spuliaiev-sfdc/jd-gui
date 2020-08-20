@@ -47,13 +47,17 @@ public class DirectorySourceSaverProvider extends AbstractSourceSaverProvider {
             Files.createDirectories(path);
             saveContent(api, controller, listener, rootPath, path, entry);
         } catch (IOException e) {
+            System.out.println("DirectorySource Saver FAILED 2 "+path.toString()+" "+e.getClass().getCanonicalName()+" "+e.getMessage());
             assert ExceptionUtil.printStackTrace(e);
         }
     }
 
     @Override
     public void saveContent(API api, SourceSaver.Controller controller, SourceSaver.Listener listener, Path rootPath, Path path, Container.Entry entry) {
-        for (Container.Entry e : getChildren(entry)) {
+        System.out.println("DirectorySource Saver START "+path.toString());
+        Collection<Container.Entry> children = getChildren(entry);
+        System.out.println("DirectorySource Saver ELEMENTS "+children.size());
+        for (Container.Entry e : children) {
             if (controller.isCancelled()) {
                 break;
             }
@@ -64,6 +68,7 @@ public class DirectorySourceSaverProvider extends AbstractSourceSaverProvider {
                 sourceSaver.save(api, controller, listener, rootPath, e);
             }
         }
+        System.out.println("DirectorySource Saver DONE "+path.toString());
     }
 
     protected Collection<Container.Entry> getChildren(Container.Entry entry) { return entry.getChildren(); }

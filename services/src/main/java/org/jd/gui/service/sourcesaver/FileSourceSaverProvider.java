@@ -35,18 +35,22 @@ public class FileSourceSaverProvider extends AbstractSourceSaverProvider {
 
     @Override
     public void saveContent(API api, SourceSaver.Controller controller, SourceSaver.Listener listener, Path rootPath, Path path, Container.Entry entry) {
+        System.out.println("FileSource Saver START "+path.toString());
         listener.pathSaved(path);
 
         try (InputStream is = entry.getInputStream()) {
             Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
+            System.out.println("FileSource Saver FAILED "+path.toString()+" "+e.getClass().getCanonicalName()+" "+e.getMessage());
             assert ExceptionUtil.printStackTrace(e);
 
             try (BufferedWriter writer = Files.newBufferedWriter(path, Charset.defaultCharset())) {
                 writer.write("// INTERNAL ERROR //");
             } catch (IOException ee) {
+                System.out.println("FileSource Saver FAILED 2 "+path.toString()+" "+ee.getClass().getCanonicalName()+" "+ee.getMessage());
                 assert ExceptionUtil.printStackTrace(ee);
             }
         }
+        System.out.println("FileSource Saver DONE "+path.toString());
     }
 }

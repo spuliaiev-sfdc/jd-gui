@@ -63,6 +63,7 @@ public class ClassFileSourceSaverProvider extends AbstractSourceSaverProvider {
 
     @Override
     public void saveContent(API api, Controller controller, Listener listener, Path rootPath, Path path, Container.Entry entry) {
+        System.out.println("ClassFileSource Saver "+path.toString());
         try {
             // Call listener
             if (path.toString().indexOf('$') == -1) {
@@ -134,6 +135,7 @@ public class ClassFileSourceSaverProvider extends AbstractSourceSaverProvider {
                 assert ExceptionUtil.printStackTrace(e);
             }
         } catch (Throwable t) {
+            System.out.println("ClassFileSource Saver FAILED "+path.toString()+" "+t.getClass().getCanonicalName()+" "+t.getMessage());
             assert ExceptionUtil.printStackTrace(t);
 
             try (BufferedWriter writer = Files.newBufferedWriter(path, Charset.defaultCharset())) {
@@ -142,6 +144,7 @@ public class ClassFileSourceSaverProvider extends AbstractSourceSaverProvider {
                 assert ExceptionUtil.printStackTrace(ee);
             }
         }
+        System.out.println("ClassFileSource Saver DONE "+path.toAbsolutePath().toString());
     }
 
     protected static boolean getPreferenceValue(Map<String, String> preferences, String key, boolean defaultValue) {
